@@ -7,23 +7,29 @@
     <title><%= title %></title>
   </head>
   <body>
-    <h1><%= msg%></h1>
-    <h2>Todo List</h2>
+    <h1 style="text-align: center"><%= msg%></h1>
+    <h2 style="text-align: center"><a href="/user/logout">Logout</a></h2>
+
     <div class="add-button">
-      <a href="/tasks/add">Add Task</a>
+      <a href="/task/add">Add Task</a>
+    </div>
+    <div class="username" style="text-align: center">
+      <h3><%= user.name %></h3>
     </div>
     <section id="task-list">
       <div class="container">
         <div class="tasks">
+          <% for(task of tasks) { %>
           <div class="task-box">
             <div class="left">
-              <p>Task Name</p>
+              <p><%= task.taskName%></p>
             </div>
             <div class="right">
-              <a href="/delete">Delete</a>
-              <a href="/edit">Edit</a>
+              <a href="/task/delete/<%= task.id%>">Delete</a>
+              <a href="/task/edit/<%= task.id%>">Edit</a>
             </div>
           </div>
+          <%}%>
         </div>
       </div>
     </section>

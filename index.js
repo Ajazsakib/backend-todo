@@ -1,56 +1,58 @@
-const express = require("express");
+const express = require('express');
 
 const app = express();
 
 const port = 8000;
 
-const path = require("path");
+const path = require('path');
 
-const db = require("./config/mongoose");
+const db = require('./config/mongoose');
 
-const cookieParser = require("cookie-parser");
+const cookieParser = require('cookie-parser');
 
 // used for session cookie
-const session = require("express-session");
-const passport = require("passport");
-const passportLocal = require("./config/passport-local-strategy");
+const session = require('express-session');
+const passport = require('passport');
+const passportLocal = require('./config/passport-local-strategy');
 
-// const MongoStore = require("connect-mongo")(session);
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
 // set the assets
-app.use(express.static("./assets"));
+app.use(express.static('./assets'));
 
 // Set the view engine to EJS
-app.set("view engine", "ejs");
+app.set('view engine', 'ejs');
 
 // Specify the directory where your views are located
-app.set("views", path.join(__dirname, "views")); // Import 'path' module if needed
+app.set('views', path.join(__dirname, 'views')); // Import 'path' module if needed
 
 // mongo store is used to store the session cookie in the db
 
+const store = new MongoDBStore({
+  uri: 'mongodb://localhost:27017/your-session-db', // Replace with your MongoDB URI
+  collection: 'sessions',
+});
+
+store.on('error', (error) => {
+  console.error('MongoDB session store error:', error);
+});
+
 app.use(
   session({
-    name: "TODO-APP",
+    name: 'TODO-APP',
     // Todo change  the secret before deployment
-    secret: "mylittlesecret",
+    secret: 'mylittlesecret',
     saveUninitialized: false,
+
     resave: false,
     cookie: {
-      maxAge: 1000 * 60 * 100,
+      maxAge: 1000 * 60 * 100 * 24,
     },
-    // store: new MongoStore(
-    //   {
-    //     mongooseConnection: db,
-    //     autoRemove: "disabled",
-    //   },
-    //   function (err) {
-    //     console.log(err || "Connect Mongo DB Setup ok");
-    //   }
-    // ),
+    store: store,
   })
 );
 
@@ -60,11 +62,11 @@ app.use(passport.session());
 app.use(passport.setAuthenticatedUser);
 
 // use express router
-app.use("/", require("./routes/"));
+app.use('/', require('./routes/'));
 
 app.listen(port, function (err) {
   if (err) {
-    console.log("Error in running the server", err);
+    console.log('Error in running the server', err);
     return;
   }
 
