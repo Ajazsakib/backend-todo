@@ -31,11 +31,14 @@ module.exports.deleteTask = async function (req, res) {
   }
 };
 
-module.exports.editForm = function (req, res) {
+module.exports.editForm = async function (req, res) {
+  let task = await Task.findById(req.params.id);
+
   return res.render('editTask', {
     title: 'Edit Task',
     heading: 'Edit Your Task',
     id: req.params.id,
+    taskName: task.taskName,
   });
 };
 

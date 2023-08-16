@@ -38,3 +38,12 @@ module.exports.logout = function (req, res, next) {
     res.redirect('/');
   });
 };
+
+module.exports.userProfile = async function (req, res) {
+  const user = await User.findById(req.params.id);
+
+  return res.render('profile', {
+    title: 'User Profile',
+    user: user,
+  });
+};
