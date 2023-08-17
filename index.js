@@ -30,6 +30,9 @@ app.set('view engine', 'ejs');
 // Specify the directory where your views are located
 app.set('views', path.join(__dirname, 'views')); // Import 'path' module if needed
 
+// make the upload path available to the browser
+app.use('/uploads', express.static(__dirname + '/uploads'));
+
 // mongo store is used to store the session cookie in the db
 
 const store = new MongoDBStore({

@@ -1,4 +1,7 @@
 const User = require('../models/user');
+const fs = require('fs');
+const path = require('path');
+
 module.exports.registration = function (req, res) {
   return res.render('registration', {
     title: 'Register || Todo App',
@@ -52,9 +55,21 @@ module.exports.updateUser = async function (req, res) {
   try {
     let user = await User.findById(req.params.id);
     if (user) {
-      user.name = req.body.name;
-      user.save();
-      return res.redirect('/');
+      User.uploadedAvatar(req, res, function (err) {
+        if (err) {
+          console.log('*******multer Error:', err);
+        }
+        user.name = req.body.name;
+        if (req.file) {
+          // this is saving the path of the uploaded file into the avatar field in the user
+          if (user.avatar) {
+            fs.unlinkSync(path.join(__dirname, '..', user.avatar));
+          }
+          user.avatar = User.avatarPath + '/' + req.file.filename;
+        }
+        user.save();
+        return res.redirect('/');
+      });
     }
   } catch (err) {
     console.log('Error in updating user', err);
