@@ -47,3 +47,16 @@ module.exports.userProfile = async function (req, res) {
     user: user,
   });
 };
+
+module.exports.updateUser = async function (req, res) {
+  try {
+    let user = await User.findById(req.params.id);
+    if (user) {
+      user.name = req.body.name;
+      user.save();
+      return res.redirect('/');
+    }
+  } catch (err) {
+    console.log('Error in updating user', err);
+  }
+};

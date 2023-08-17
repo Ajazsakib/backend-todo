@@ -25,4 +25,6 @@ router.get('/logout', userController.logout);
 
 router.get('/profile/:id', userController.userProfile);
 
+router.post('/update-profile/:id', userController.updateUser);
+
 module.exports = router;

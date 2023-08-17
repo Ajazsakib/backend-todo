@@ -25,13 +25,24 @@
               <p><%= task.taskName%></p>
             </div>
             <div class="right">
-              <a href="/task/delete/<%= task.id%>">Delete</a>
-              <a href="/task/edit/<%= task.id%>">Edit</a>
+              <a
+                href="/task/delete/<%= task.id%>"
+                data-task-id="deleteTask-<%= task.id %>"
+                class="deleteTask"
+                >Delete</a
+              >
+              <a href="/task/edit/<%= task.id%>" id="editTask">Edit</a>
             </div>
           </div>
           <%}%>
         </div>
       </div>
     </section>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script src="/js/createTask.js"></script>
   </body>
 </html>
